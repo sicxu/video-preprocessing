@@ -124,7 +124,7 @@ def crop_video(person_id, video_id, video_path, args):
 
 def download(video_id, args):
     video_path = os.path.join(args.video_folder, video_id + ".mp4")
-    subprocess.call([args.youtube, '-f', "''best/mp4''", '--write-auto-sub', '--write-sub',
+    subprocess.call(['youtube-dl', '-f', "''best/mp4''", '--write-auto-sub', '--write-sub',
                      '--sub-lang', 'en', '--skip-unavailable-fragments',
                      "https://www.youtube.com/watch?v=" + video_id, "--output",
                      video_path], stdout=DEVNULL, stderr=DEVNULL)
@@ -239,7 +239,6 @@ if __name__ == "__main__":
     parser.add_argument("--out_folder", default='vox-png', help='Folder for processed dataset')
     parser.add_argument("--chunks_metadata", default='vox-metadata.csv', help='File with metadata')
 
-    parser.add_argument("--youtube", default='./youtube-dl', help='Command for launching youtube-dl')
     parser.add_argument("--workers", default=1, type=int, help='Number of parallel workers')
     parser.add_argument("--device_ids", default="0", help="Names of the devices comma separated.")
 
@@ -297,3 +296,4 @@ if __name__ == "__main__":
     ids_range = {'id' + str(num).zfill(5) for num in range(args.data_range[0], args.data_range[1])}
     ids = sorted(list(ids.intersection(ids_range)))
     scheduler(ids, run, args)
+# nohup python -u crop_vox.py --workers 30 --dataset_version 2 --format .mp4 --video_folder /data/vox2/youtube --chunk_folder /data/vox2/chunks --out_folder /data/vox2/crop >output 2>&1 &  --device_ids 0,1,2 --

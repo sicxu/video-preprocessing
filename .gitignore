@@ -1,0 +1,5 @@
+txt/*
+*.zip
+youtube-dl
+__py*
+.vscode

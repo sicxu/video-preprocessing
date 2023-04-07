@@ -19,7 +19,7 @@ DEVNULL = open(os.devnull, 'wb')
 
 def download(video_id, args):
     video_path = os.path.join(args.video_folder, video_id + ".mp4")
-    subprocess.call([args.youtube, '-f', "''best/mp4''", '--write-auto-sub', '--write-sub',
+    subprocess.call(['youtube-dl', '-f', "''best/mp4''", '--write-auto-sub', '--write-sub',
                      '--sub-lang', 'en', '--skip-unavailable-fragments',
                      "https://www.youtube.com/watch?v=" + video_id, "--output",
                      video_path], stdout=DEVNULL, stderr=DEVNULL)
@@ -79,7 +79,7 @@ if __name__ == "__main__":
     parser.add_argument("--out_folder", default='taichi-png', help='Path to output')
     parser.add_argument("--format", default='.png', help='Storing format')
     parser.add_argument("--workers", default=1, type=int, help='Number of workers')
-    parser.add_argument("--youtube", default='./youtube-dl', help='Path to youtube-dl')
+    parser.add_argument("--youtube", default='youtube-dl', help='Path to youtube-dl')
  
     parser.add_argument("--image_shape", default=(256, 256), type=lambda x: tuple(map(int, x.split(','))),
                         help="Image shape, None for no resize")
