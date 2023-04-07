@@ -1,0 +1,835 @@
+target:
+  service: singularity
+  # run "pt target list amlk8s" to list the names of available AMLK8S targets
+  name: msroctovc
+  workspace_name: msroctows
+  # vc: resrchvc
+
+environment:
+  image: sichengxu/pytorch:pyt_1120_videoprocess
+
+
+storage:
+  my_storage:
+    storage_account_name: igsharestorage
+    container_name: sichengxu
+    mount_dir: /mnt/blob
+
+jobs:
+
+- name: 0408_download_00
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 0-209 --chunks_metadata metadatas/vox2_00
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_01
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 209-418 --chunks_metadata metadatas/vox2_01
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_02
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 418-627 --chunks_metadata metadatas/vox2_02
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_03
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 627-836 --chunks_metadata metadatas/vox2_03
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_04
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 836-1045 --chunks_metadata metadatas/vox2_04
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_05
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 1045-1254 --chunks_metadata metadatas/vox2_05
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_06
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 1254-1463 --chunks_metadata metadatas/vox2_06
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_07
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 1463-1672 --chunks_metadata metadatas/vox2_07
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_08
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 1672-1881 --chunks_metadata metadatas/vox2_08
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_09
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 1881-2090 --chunks_metadata metadatas/vox2_09
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_10
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 2090-2299 --chunks_metadata metadatas/vox2_10
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_11
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 2299-2508 --chunks_metadata metadatas/vox2_11
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_12
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 2508-2717 --chunks_metadata metadatas/vox2_12
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_13
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 2717-2926 --chunks_metadata metadatas/vox2_13
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_14
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 2926-3135 --chunks_metadata metadatas/vox2_14
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_15
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 3135-3344 --chunks_metadata metadatas/vox2_15
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_16
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 3344-3553 --chunks_metadata metadatas/vox2_16
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_17
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 3553-3762 --chunks_metadata metadatas/vox2_17
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_18
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 3762-3971 --chunks_metadata metadatas/vox2_18
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_19
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 3971-4180 --chunks_metadata metadatas/vox2_19
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_20
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 4180-4389 --chunks_metadata metadatas/vox2_20
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_21
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 4389-4598 --chunks_metadata metadatas/vox2_21
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_22
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 4598-4807 --chunks_metadata metadatas/vox2_22
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_23
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 4807-5016 --chunks_metadata metadatas/vox2_23
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_24
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 5016-5225 --chunks_metadata metadatas/vox2_24
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_25
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 5225-5434 --chunks_metadata metadatas/vox2_25
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_26
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 5434-5643 --chunks_metadata metadatas/vox2_26
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_27
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 5643-5852 --chunks_metadata metadatas/vox2_27
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_28
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 5852-6061 --chunks_metadata metadatas/vox2_28
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_29
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 6061-6270 --chunks_metadata metadatas/vox2_29
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_30
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 6270-6479 --chunks_metadata metadatas/vox2_30
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_31
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 6479-6688 --chunks_metadata metadatas/vox2_31
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_32
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 6688-6897 --chunks_metadata metadatas/vox2_32
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_33
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 6897-7106 --chunks_metadata metadatas/vox2_33
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_34
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 7106-7315 --chunks_metadata metadatas/vox2_34
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_35
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 7315-7524 --chunks_metadata metadatas/vox2_35
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_36
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 7524-7733 --chunks_metadata metadatas/vox2_36
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_37
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 7733-7942 --chunks_metadata metadatas/vox2_37
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_38
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 7942-8151 --chunks_metadata metadatas/vox2_38
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_39
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 8151-8360 --chunks_metadata metadatas/vox2_39
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_40
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 8360-8569 --chunks_metadata metadatas/vox2_40
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_41
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 8569-8778 --chunks_metadata metadatas/vox2_41
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_42
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 8778-8987 --chunks_metadata metadatas/vox2_42
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_43
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 8987-9196 --chunks_metadata metadatas/vox2_43
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_44
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 9196-9405 --chunks_metadata metadatas/vox2_44
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_45
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 9405-9614 --chunks_metadata metadatas/vox2_45
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_46
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 9614-9823 --chunks_metadata metadatas/vox2_46
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+
+- name: 0408_download_47
+  sku: G1
+  priority: high
+  preemptible: False
+  command:
+  - cd /mnt/blob
+  - ./azcopy copy "https://igsharestorage.blob.core.windows.net/sichengxu/codes/video-preprocessing/txt.tar?sv=2020-10-02&se=2023-04-21T10%3A57%3A40Z&sr=c&sp=rwl&sig=1uzs0Kwvm%2Bz%2B2I1gGL0ygcUHYp%2Fw%2B4ufZvIhSr5QzxY%3D" /tmp/ --recursive
+  - cd /tmp
+  - tar xvf txt.tar
+  - cd /mnt/blob/codes/video-preprocessing
+  - python crop_vox.py --workers 10 --dataset_version 2 --format .mp4 --annotations_folder /tmp/txt --video_folder /tmp/youtube --chunk_folder /tmp/chunks --out_folder /tmp/crop --bbox_folder /tmp/bbox --video_folder_f /mnt/blob/datasets/vox/vox2/youtube --chunk_folder_f /mnt/blob/datasets/vox/vox2/chunks --out_folder_f /mnt/blob/datasets/vox/vox2/crop --bbox_folder_f /mnt/blob/datasets/vox/vox2/bbox --data_range 9823-10000 --chunks_metadata metadatas/vox2_47
+  submit_args:
+    env:
+      {MKL_THREADING_LAYER: GNU}
+    container_args:
+      shm_size: 512g
+

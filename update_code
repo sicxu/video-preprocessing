@@ -1,0 +1,3 @@
+/home/sichengxu/sicheng/azcopy copy video-preprocessing "https://igsharestorage.blob.core.windows.net/sichengxu/codes/?sv=2020-10-02&se=2023-05-07T06%3A08%3A03Z&sr=c&sp=rwl&sig=4ZOTh9XBkRXOo94hO8EJ8oZShTh3e7q%2BunMqH3Q8uH8%3D" --overwrite true --recursive
+
+python crop_vox.py --dataset_version 2 --format .mp4 --annotations_folder /data/vox/txt --video_folder /data/vox/vox2/youtube --chunk_folder /data/vox/vox2/chunks --out_folder /data/vox/vox2/crop --bbox_folder /data/vox/vox2/bbox --workers 30 --device_ids 0,1,2 --data_range 0-5000

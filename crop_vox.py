@@ -9,6 +9,7 @@ import time
 from util import bb_intersection_over_union, join, scheduler, crop_bbox_from_frames, save
 from argparse import ArgumentParser
 from skimage.transform import resize
+import cv2
 warnings.filterwarnings("ignore")
 
 DEVNULL = open(os.devnull, 'wb')
@@ -31,7 +32,7 @@ def save_bbox_list(video_path, bbox_list):
     for bbox in bbox_list:
         print("%s,%s,%s,%s" % tuple(bbox[:4]), file=f)
     f.close()
-
+    return os.path.join(args.bbox_folder, os.path.basename(video_path)[:-4] + '.txt')
 
 def estimate_bbox(person_id, video_id, video_path, fa, args):
     utterance = video_path.split('#')[1]
@@ -58,7 +59,7 @@ def estimate_bbox(person_id, video_id, video_path, fa, args):
     except IndexError:
         None
 
-    save_bbox_list(video_path, bbox_list)
+    return save_bbox_list(video_path, bbox_list)
 
 
 def store(frame_list, tube_bbox, video_id, utterance, person_id, start, end, video_count, chunk_start, args):
@@ -66,7 +67,7 @@ def store(frame_list, tube_bbox, video_id, utterance, person_id, start, end, vid
                                             image_shape=args.image_shape, min_size=args.min_size, 
                                             increase_area=args.increase)
     if out is None:
-        return []
+        return [], None
 
     start += round(chunk_start * REF_FPS)
     end += round(chunk_start * REF_FPS)
@@ -75,7 +76,7 @@ def store(frame_list, tube_bbox, video_id, utterance, person_id, start, end, vid
     save(os.path.join(args.out_folder, partition, name), out, args.format)
     return [{'bbox': '-'.join(map(str, final_bbox)), 'start': start, 'end': end, 'fps': REF_FPS,
              'video_id': '#'.join([video_id, person_id]), 'height': frame_list[0].shape[0], 
-             'width': frame_list[0].shape[1], 'partition': partition}]
+             'width': frame_list[0].shape[1], 'partition': partition}], os.path.join(args.out_folder, partition, name)
 
 
 def crop_video(person_id, video_id, video_path, args):
@@ -92,6 +93,7 @@ def crop_video(person_id, video_id, video_path, args):
     tube_bbox = None
     frame_list = []
     chunks_data = []
+    save_paths = []
 
     try:
         for i, frame in enumerate(reader):
@@ -104,8 +106,10 @@ def crop_video(person_id, video_id, video_path, args):
 
             if bb_intersection_over_union(initial_bbox, bbox) < args.iou_with_initial or len(
                     frame_list) >= args.max_frames:
-                chunks_data += store(frame_list, tube_bbox, video_id, utterance, person_id, start, i, video_count, chunk_start,
+                cur_chunks_data, cur_save_path = store(frame_list, tube_bbox, video_id, utterance, person_id, start, i, video_count, chunk_start,
                                      args)
+                chunks_data += cur_chunks_data
+                save_paths.append(cur_save_path)
                 video_count += 1
                 initial_bbox = bbox
                 start = i
@@ -116,10 +120,38 @@ def crop_video(person_id, video_id, video_path, args):
     except IndexError as e:
         None
     
-    chunks_data += store(frame_list, tube_bbox, video_id, utterance, person_id, start, i + 1, video_count, chunk_start,
+    cur_chunks_data, cur_save_path = store(frame_list, tube_bbox, video_id, utterance, person_id, start, i + 1, video_count, chunk_start,
                          args)
+    chunks_data += cur_chunks_data
+    save_paths.append(cur_save_path)
+    return chunks_data, save_paths
 
-    return chunks_data
+
+def check_video(video_path):
+    if not os.path.isfile(video_path):
+        return False
+    try:
+        vid = cv2.VideoCapture(video_path)
+        if not vid.isOpened():
+            return False
+    except:
+        return False
+    return True
+
+
+def copy_to_blob(file_names, save_folder):
+    # blob_path = "/home/sichengxu/jianfeng/blob"
+    # valid_key = "?sv=2020-10-02&se=2023-05-07T07%3A22%3A07Z&sr=c&sp=rwl&sig=DVWt2QNwifQHMZtgnvsPFrDAm%2BeoWHodufRa%2FiEFgM4%3D"
+    # save_dir = "https://igsharestorage.blob.core.windows.net/v-jxiang/%s/%s"%(save_folder.split(blob_path)[-1][1:], valid_key)
+
+    blob_path = "/mnt/blob"
+    valid_key = "?sv=2020-10-02&se=2023-05-07T06%3A08%3A03Z&sr=c&sp=rwl&sig=4ZOTh9XBkRXOo94hO8EJ8oZShTh3e7q%2BunMqH3Q8uH8%3D"
+    save_dir = "https://igsharestorage.blob.core.windows.net/sichengxu/%s/%s"%(save_folder.split(blob_path)[-1], valid_key)
+    
+    for file_name in file_names:
+        if file_name is not None:
+            os.system(blob_path + '/azcopy copy ' + file_name + ' ' + '"' + save_dir + '"' + ' --recursive --overwrite true')
+
 
 
 def download(video_id, args):
@@ -174,46 +206,60 @@ def run(params):
     video_folder = os.path.join(args.annotations_folder, person_id)
     
     chunks_data = []
-    for video_id in os.listdir(video_folder):
-        intermediate_files = []
-        try:
-            if args.download:
+    ori_video_files, chunk_video_files, bbox_files, crop_video_files = [], [], [], []
+    video_ids = os.listdir(video_folder)
+    for i, video_id in enumerate(video_ids):
+        if i != len(video_ids) - 1:
+            next_video_id = video_ids[i + 1]
+            
+            if check_video(os.path.join(args.video_folder_f, next_video_id + ".mp4")):
+                print("skip %s"%video_id)
+                continue
+        # try:
+        if args.download:
+            if not check_video(os.path.join(args.video_folder_f, video_id + ".mp4")):
                 video_path = download(video_id, args)
-                intermediate_files.append(video_path)
+                ori_video_files.append(video_path)
 
-            if args.split_in_utterance:
-                chunk_names = split_in_utterance(person_id, video_id, args)
-                intermediate_files += chunk_names
+        if args.split_in_utterance:
+            chunk_names = split_in_utterance(person_id, video_id, args)
+            chunk_video_files += chunk_names
 
-            if args.estimate_bbox:
-                path = os.path.join(args.chunk_folder, video_id + '*.mp4')
-                for chunk in glob.glob(path):
-                    while True:
-                        try:
-                            estimate_bbox(person_id, video_id, chunk, fa, args)
+        if args.estimate_bbox:
+            path = os.path.join(args.chunk_folder, video_id + '*.mp4')
+            for chunk in glob.glob(path):
+                while True:
+                    try:
+                        bbox_files.append(estimate_bbox(person_id, video_id, chunk, fa, args))
+                        break
+                    except RuntimeError as e:
+                        if str(e).startswith('CUDA'):
+                            print("Warning: out of memory, sleep for 1s")
+                            time.sleep(1)
+                        else:
+                            print(e)
                             break
-                        except RuntimeError as e:
-                            if str(e).startswith('CUDA'):
-                                print("Warning: out of memory, sleep for 1s")
-                                time.sleep(1)
-                            else:
-                                print(e)
-                                break
 
-            if args.crop:
-                path = os.path.join(args.chunk_folder, video_id + '*.mp4')
-                for chunk in glob.glob(path):
-                    if not os.path.exists(os.path.join(args.bbox_folder, os.path.basename(chunk)[:-4] + '.txt')):
-                       print ("BBox not found %s" % chunk)
-                       continue
-                    chunks_data += crop_video(person_id, video_id, chunk, args)
+        if args.crop:
+            path = os.path.join(args.chunk_folder, video_id + '*.mp4')
+            for chunk in glob.glob(path):
+                if not os.path.exists(os.path.join(args.bbox_folder, os.path.basename(chunk)[:-4] + '.txt')):
+                    print ("BBox not found %s" % chunk)
+                    continue
+                cur_chunks_data, save_paths = crop_video(person_id, video_id, chunk, args)
+                chunks_data += cur_chunks_data
+                crop_video_files += save_paths
 
-            if args.remove_intermediate_results:
-                for file in intermediate_files:
-                    if os.path.exists(file):
-                        os.remove(file)
-        except Exception as e:
-            print (e)
+        if args.azcopy and (i + 1) % 5 == 0:
+            print("copy to blob")
+            copy_to_blob(ori_video_files, args.video_folder_f)
+            copy_to_blob(chunk_video_files, args.chunk_folder_f)
+            copy_to_blob(bbox_files, args.bbox_folder_f)
+            copy_to_blob(crop_video_files, args.out_folder_f)
+            ori_video_files, chunk_video_files, bbox_files, crop_video_files = [], [], [], []
+
+        # except Exception as e:
+        #     print (e)
     return chunks_data
 
 
@@ -233,10 +279,17 @@ if __name__ == "__main__":
 
     parser.add_argument("--annotations_folder", default='txt', help='Path to utterance annotations')
 
-    parser.add_argument("--video_folder", default='videos', help='Path to intermediate videos')
+    parser.add_argument("--video_folder", default='youtube', help='Path to intermediate videos')
     parser.add_argument("--chunk_folder", default='chunks', help="Path to folder with video chunks")
     parser.add_argument("--bbox_folder", default='bbox', help="Path to folder with bboxes")
-    parser.add_argument("--out_folder", default='vox-png', help='Folder for processed dataset')
+    parser.add_argument("--out_folder", default='crop', help='Folder for processed dataset')
+
+
+    parser.add_argument("--video_folder_f", default='youtube', help='Path to intermediate videos')
+    parser.add_argument("--chunk_folder_f", default='chunks', help="Path to folder with video chunks")
+    parser.add_argument("--bbox_folder_f", default='bbox', help="Path to folder with bboxes")
+    parser.add_argument("--out_folder_f", default='crop', help='Folder for processed dataset')
+
     parser.add_argument("--chunks_metadata", default='vox-metadata.csv', help='File with metadata')
 
     parser.add_argument("--workers", default=1, type=int, help='Number of parallel workers')
@@ -251,7 +304,7 @@ if __name__ == "__main__":
     parser.add_argument("--no-estimate-bbox", dest="estimate_bbox", action="store_false",
                         help="Do not estimate the bboxes")
     parser.add_argument("--no-crop", dest="crop", action="store_false", help="Do not crop the videos")
-
+    parser.add_argument("--azcopy", dest="azcopy", action="store_true", help="copy the videos")
     parser.add_argument("--remove-intermediate-results", dest="remove_intermediate_results", action="store_true",
                         help="Remove intermediate videos")
 
@@ -260,6 +313,7 @@ if __name__ == "__main__":
     parser.set_defaults(crop=True)
     parser.set_defaults(estimate_bbox=True)
     parser.set_defaults(remove_intermediate_results=False)
+    # parser.set_defaults(azcopy=True)
 
     args = parser.parse_args()
 
@@ -280,6 +334,7 @@ if __name__ == "__main__":
                         'id07494', 'id04950', 'id04478', 'id02685', 'id02542', 'id05714', 'id02465', 'id05654', 'id05202',
                         'id00419', 'id03981', 'id04366', 'id07396', 'id02019', 'id01822', 'id06816', 'id07621', 'id07620', 'id04862']
 
+    args.chunks_metadata = args.chunks_metadata.replace(".csv", "_%02d"%args.dataset_version)
     if not os.path.exists(args.video_folder):
         os.makedirs(args.video_folder)
     if not os.path.exists(args.chunk_folder):
@@ -291,9 +346,22 @@ if __name__ == "__main__":
     for partition in ['test', 'train']:
         if not os.path.exists(os.path.join(args.out_folder, partition)):
             os.makedirs(os.path.join(args.out_folder, partition))
+    if args.azcopy:
+        if not os.path.exists(args.video_folder_f):
+            os.makedirs(args.video_folder_f)
+        if not os.path.exists(args.chunk_folder_f):
+            os.makedirs(args.chunk_folder_f)
+        if not os.path.exists(args.bbox_folder_f):
+            os.makedirs(args.bbox_folder_f)
+        if not os.path.exists(args.out_folder_f):
+            os.makedirs(args.out_folder_f)
+        for partition in ['test', 'train']:
+            if not os.path.exists(os.path.join(args.out_folder_f, partition)):
+                os.makedirs(os.path.join(args.out_folder_f, partition))
 
     ids = set(os.listdir(args.annotations_folder))
     ids_range = {'id' + str(num).zfill(5) for num in range(args.data_range[0], args.data_range[1])}
     ids = sorted(list(ids.intersection(ids_range)))
     scheduler(ids, run, args)
-# nohup python -u crop_vox.py --workers 30 --dataset_version 2 --format .mp4 --video_folder /data/vox2/youtube --chunk_folder /data/vox2/chunks --out_folder /data/vox2/crop >output 2>&1 &  --device_ids 0,1,2 --
+    # for id in ids:
+    #     run((id, args.device_ids, args))
