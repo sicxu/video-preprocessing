@@ -358,6 +358,11 @@ if __name__ == "__main__":
         for partition in ['test', 'train']:
             if not os.path.exists(os.path.join(args.out_folder_f, partition)):
                 os.makedirs(os.path.join(args.out_folder_f, partition))
+    else:
+        args.video_folder_f = args.video_folder
+        args.chunk_folder_f = args.chunk_folder
+        args.bbox_folder_f = args.bbox_folder
+        args.out_folder_f = args.out_folder
 
     ids = set(os.listdir(args.annotations_folder))
     ids_range = {'id' + str(num).zfill(5) for num in range(args.data_range[0], args.data_range[1])}
