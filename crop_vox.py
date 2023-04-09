@@ -146,7 +146,7 @@ def copy_to_blob(file_names, save_folder):
 
     blob_path = "/mnt/blob"
     valid_key = "?sv=2020-10-02&se=2023-05-07T06%3A08%3A03Z&sr=c&sp=rwl&sig=4ZOTh9XBkRXOo94hO8EJ8oZShTh3e7q%2BunMqH3Q8uH8%3D"
-    save_dir = "https://igsharestorage.blob.core.windows.net/sichengxu/%s/%s"%(save_folder.split(blob_path)[-1], valid_key)
+    save_dir = "https://igsharestorage.blob.core.windows.net/sichengxu/%s/%s"%(save_folder.split(blob_path)[-1][1:], valid_key)
     
     for file_name in file_names:
         if file_name is not None:
@@ -215,51 +215,51 @@ def run(params):
             if check_video(os.path.join(args.video_folder_f, next_video_id + ".mp4")):
                 print("skip %s"%video_id)
                 continue
-        # try:
-        if args.download:
-            if not check_video(os.path.join(args.video_folder_f, video_id + ".mp4")):
-                video_path = download(video_id, args)
-                ori_video_files.append(video_path)
+        try:
+            if args.download:
+                if not check_video(os.path.join(args.video_folder_f, video_id + ".mp4")):
+                    video_path = download(video_id, args)
+                    ori_video_files.append(video_path)
 
-        if args.split_in_utterance:
-            chunk_names = split_in_utterance(person_id, video_id, args)
-            chunk_video_files += chunk_names
+            if args.split_in_utterance:
+                chunk_names = split_in_utterance(person_id, video_id, args)
+                chunk_video_files += chunk_names
 
-        if args.estimate_bbox:
-            path = os.path.join(args.chunk_folder, video_id + '*.mp4')
-            for chunk in glob.glob(path):
-                while True:
-                    try:
-                        bbox_files.append(estimate_bbox(person_id, video_id, chunk, fa, args))
-                        break
-                    except RuntimeError as e:
-                        if str(e).startswith('CUDA'):
-                            print("Warning: out of memory, sleep for 1s")
-                            time.sleep(1)
-                        else:
-                            print(e)
+            if args.estimate_bbox:
+                path = os.path.join(args.chunk_folder, video_id + '*.mp4')
+                for chunk in glob.glob(path):
+                    while True:
+                        try:
+                            bbox_files.append(estimate_bbox(person_id, video_id, chunk, fa, args))
                             break
+                        except RuntimeError as e:
+                            if str(e).startswith('CUDA'):
+                                print("Warning: out of memory, sleep for 1s")
+                                time.sleep(1)
+                            else:
+                                print(e)
+                                break
 
-        if args.crop:
-            path = os.path.join(args.chunk_folder, video_id + '*.mp4')
-            for chunk in glob.glob(path):
-                if not os.path.exists(os.path.join(args.bbox_folder, os.path.basename(chunk)[:-4] + '.txt')):
-                    print ("BBox not found %s" % chunk)
-                    continue
-                cur_chunks_data, save_paths = crop_video(person_id, video_id, chunk, args)
-                chunks_data += cur_chunks_data
-                crop_video_files += save_paths
+            if args.crop:
+                path = os.path.join(args.chunk_folder, video_id + '*.mp4')
+                for chunk in glob.glob(path):
+                    if not os.path.exists(os.path.join(args.bbox_folder, os.path.basename(chunk)[:-4] + '.txt')):
+                        print ("BBox not found %s" % chunk)
+                        continue
+                    cur_chunks_data, save_paths = crop_video(person_id, video_id, chunk, args)
+                    chunks_data += cur_chunks_data
+                    crop_video_files += save_paths
 
-        if args.azcopy and (i + 1) % 5 == 0:
-            print("copy to blob")
-            copy_to_blob(ori_video_files, args.video_folder_f)
-            copy_to_blob(chunk_video_files, args.chunk_folder_f)
-            copy_to_blob(bbox_files, args.bbox_folder_f)
-            copy_to_blob(crop_video_files, args.out_folder_f)
-            ori_video_files, chunk_video_files, bbox_files, crop_video_files = [], [], [], []
+            if args.azcopy and (i + 1) % 5 == 0:
+                print("copy to blob")
+                copy_to_blob(ori_video_files, args.video_folder_f)
+                copy_to_blob(chunk_video_files, args.chunk_folder_f)
+                copy_to_blob(bbox_files, args.bbox_folder_f)
+                copy_to_blob(crop_video_files, args.out_folder_f)
+                ori_video_files, chunk_video_files, bbox_files, crop_video_files = [], [], [], []
 
-        # except Exception as e:
-        #     print (e)
+        except Exception as e:
+            print (e)
     return chunks_data
 
 
